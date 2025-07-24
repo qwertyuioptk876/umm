@@ -1,0 +1,7 @@
+local old; old = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
+    local method = getnamecallmethod()
+    if method == "FireServer" then
+        print("[FireServer 偵測]", self:GetFullName(), ...)
+    end
+    return old(self, ...)
+end))
