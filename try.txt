@@ -1,4 +1,22 @@
-local StarterGui = game:GetService("StarterGui")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "NotifyGui"
+screenGui.Parent = playerGui
+
+local label = Instance.new("TextLabel")
+label.Size = UDim2.new(1, 0, 0, 200)
+label.Position = UDim2.new(0, 0, 0, 0)
+label.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+label.TextColor3 = Color3.new(1, 1, 1)
+label.TextWrapped = true
+label.TextYAlignment = Enum.TextYAlignment.Top
+label.Text = ""
+label.Parent = screenGui
+
+local history = {}
 
 local oldNamecall
 oldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
@@ -6,14 +24,14 @@ oldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
     if method == "FireServer" and typeof(self) == "Instance" then
         local success, err = pcall(function()
             local msg = "[FireServer] "..self:GetFullName()
-            StarterGui:SetCore("SendNotification", {
-                Title = "FireServer偵測",
-                Text = msg,
-                Duration = 3
-            })
+            table.insert(history, msg)
+            if #history > 10 then
+                table.remove(history, 1)
+            end
+            label.Text = table.concat(history, "\n")
         end)
         if not success then
-            warn("通知錯誤:", err)
+            warn("更新訊息錯誤:", err)
         end
     end
     return oldNamecall(self, ...)
