@@ -1,7 +1,20 @@
-local old; old = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
+local StarterGui = game:GetService("StarterGui")
+
+local oldNamecall
+oldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
     local method = getnamecallmethod()
-    if method == "FireServer" then
-        print("[FireServer 偵測]", self:GetFullName(), ...)
+    if method == "FireServer" and typeof(self) == "Instance" then
+        local success, err = pcall(function()
+            local msg = "[FireServer] "..self:GetFullName()
+            StarterGui:SetCore("SendNotification", {
+                Title = "FireServer偵測",
+                Text = msg,
+                Duration = 3
+            })
+        end)
+        if not success then
+            warn("通知錯誤:", err)
+        end
     end
-    return old(self, ...)
+    return oldNamecall(self, ...)
 end))
