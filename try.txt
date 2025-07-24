@@ -2,7 +2,6 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
--- UI 元件
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "SafeMonitorGui"
 screenGui.Parent = playerGui
@@ -18,12 +17,10 @@ label.TextScaled = true
 label.Text = ""
 label.Parent = screenGui
 
--- 儲存歷史紀錄
 local history = {}
 
--- Hook Metamethod（安全版）
 local oldNamecall
-oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
+oldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
 	local method = getnamecallmethod()
 	if not checkcaller() and method == "FireServer" then
 		local msg = "[FireServer] " .. self:GetFullName()
@@ -34,4 +31,4 @@ oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
 		label.Text = table.concat(history, "\n")
 	end
 	return oldNamecall(self, ...)
-end)
+end))
