@@ -1,1 +1,14 @@
+-- 抓 ReplicatedStorage 下所有 RemoteEvent 傳給 Client 的事件
+local rs = game:GetService("ReplicatedStorage")
+
+for _, v in ipairs(rs:GetDescendants()) do
+    if v:IsA("RemoteEvent") then
+        v.OnClientEvent:Connect(function(...)
+            print("📩 來自 Server 的事件：", v:GetFullName())
+            for i, v in ipairs({...}) do
+                print("   🔹 參數 " .. i .. ":", v)
+            end
+        end)
+    end
+end
 
