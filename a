@@ -1,14 +1,33 @@
--- 抓 ReplicatedStorage 下所有 RemoteEvent 傳給 Client 的事件
 local rs = game:GetService("ReplicatedStorage")
 
+-- 遞迴列印 table 內容的函式
+local function dumpTable(t, indent)
+    indent = indent or 0
+    local prefix = string.rep("  ", indent)
+    if type(t) ~= "table" then
+        print(prefix .. tostring(t))
+        return
+    end
+    for k, v in pairs(t) do
+        if type(v) == "table" then
+            print(prefix .. tostring(k) .. ":")
+            dumpTable(v, indent + 1)
+        else
+            print(prefix .. tostring(k) .. ": " .. tostring(v))
+        end
+    end
+end
+
+-- 監聽 ReplicatedStorage 所有 RemoteEvent 傳來的事件
 for _, v in ipairs(rs:GetDescendants()) do
     if v:IsA("RemoteEvent") then
         v.OnClientEvent:Connect(function(...)
             print("📩 來自 Server 的事件：", v:GetFullName())
-            for i, v in ipairs({...}) do
-                print("   🔹 參數 " .. i .. ":", v)
+            local args = {...}
+            for i, arg in ipairs(args) do
+                print("   🔹 參數 " .. i .. ":")
+                dumpTable(arg)
             end
         end)
     end
 end
-
