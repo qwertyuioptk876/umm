@@ -3,10 +3,8 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local PlayerGui = player:WaitForChild("PlayerGui")
 
--- 監聽開關
 local listenEnabled = true
 
--- 建立 UI 按鈕
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "EventListenerToggleGui"
 ScreenGui.Parent = PlayerGui
@@ -22,9 +20,9 @@ toggleButton.Parent = ScreenGui
 toggleButton.MouseButton1Click:Connect(function()
     listenEnabled = not listenEnabled
     if listenEnabled then
-        toggleButton.Text = "監聽 ON"
+        toggleButton.Text = "ON"
     else
-        toggleButton.Text = "監聽 OFF"
+        toggleButton.Text = "OFF"
     end
 end)
 
