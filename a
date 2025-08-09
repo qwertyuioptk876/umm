@@ -1,6 +1,5 @@
 local rs = game:GetService("ReplicatedStorage")
 
--- 遞迴列印 table 內容的函式
 local function dumpTable(t, indent)
     indent = indent or 0
     local prefix = string.rep("  ", indent)
@@ -18,7 +17,6 @@ local function dumpTable(t, indent)
     end
 end
 
--- 監聽 ReplicatedStorage 所有 RemoteEvent 傳來的事件
 for _, v in ipairs(rs:GetDescendants()) do
     if v:IsA("RemoteEvent") then
         v.OnClientEvent:Connect(function(...)
