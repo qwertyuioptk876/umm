@@ -20,7 +20,7 @@ end
 for _, v in ipairs(rs:GetDescendants()) do
     if v:IsA("RemoteEvent") then
         v.OnClientEvent:Connect(function(...)
-            print("📩 來自 Server 的事件：", v:GetFullName())
+            print("📩 Server 的事件：", v:GetFullName())
             local args = {...}
             for i, arg in ipairs(args) do
                 print("   🔹 參數 " .. i .. ":")
